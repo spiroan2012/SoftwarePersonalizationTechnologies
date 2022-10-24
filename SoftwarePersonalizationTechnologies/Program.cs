@@ -48,8 +48,9 @@ try
     var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
     await context.Database.MigrateAsync();
     await Seed.SeedRolesAndAdmin(userManager, roleManager);
-    await Seed.SeedCategories(context);
-    await Seed.SeedHalls(context);
+    await Seed.SeedData(context);
+    //await Seed.SeedCategories(context);
+    //await Seed.SeedHalls(context);
     //app.Configuration.ConfigureServicePointManager();
 
     // Configure the HTTP request pipeline.
@@ -67,7 +68,7 @@ try
     app.UseCors(x => x.AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials()
-                .WithOrigins("https://localhost:4200"));
+                .WithOrigins("http://localhost:4200"));
 
     app.UseEndpoints(endpoints =>
     {
