@@ -23,6 +23,8 @@ namespace Api.AutomapperProfile
                 .ForMember(dest => dest.Directors, opt => opt
                     .MapFrom(src => string.Join(", ", src.Directors!))); ;
             CreateMap<RegisterDto, AppUser>();
+            CreateMap<Genre, GenreDto>();
+            CreateMap<GenreDto, Genre>();
             CreateMap<AppUser, UserDto>();
             CreateMap<Booking, BookingDto>()
                 .ForMember(dest => dest.Seats, opt =>

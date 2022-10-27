@@ -51,13 +51,22 @@ namespace Controllers
             return Ok();
         }
 
+        [HttpGet("GetGenresForUser")]
+        public async Task<ActionResult<IList<GenreDto>>> GetGenresForUser()
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        //[HttpGet("GetByEmail/{email}")]
-        //public async Task<ActionResult<IEnumerable<UserDto>>> GetUserByEmail(string email)
-        //{
-        //    var user = await _userRepository.GetUserByEmailAsync(email);
-        //    if (user is null) return Ok(null);
-        //    return Ok(_mapper.Map<UserDto>(user));
-        //}
+            return Ok(await _userService.GetGenresForUser(int.Parse(userId)));
+        }
+
+        [HttpPost("UpdatePreferedGenres")]
+        public async Task<ActionResult> UpdatePreferedGenres(int[] genresIds)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            await _userService.UpdateGenresForLoggedUser(genresIds, int.Parse(userId));
+
+            return Ok();
+        }
     }
 }

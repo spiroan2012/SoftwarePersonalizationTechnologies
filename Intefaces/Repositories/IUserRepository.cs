@@ -12,7 +12,10 @@ namespace Intefaces.Repositories
         Task<AppUser?> GetUserByEmailAsync(string? email);
         Task<AppUser?> GetUserByUsernameAsync(string? username);
         Task<string> HealthCheck();
+        Task<IReadOnlyList<Genre>> GetGenresForUser(int userId);
         void UpdateUserLocationAsync(AppUser? user, double longt, double lat);
+        void RemoveGenresForUser(AppUser? user);
+        void AddGenreForUser(Genre? genre, AppUser? user);
         Task<bool> Complete();
     }
 }

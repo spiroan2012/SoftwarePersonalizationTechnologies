@@ -75,5 +75,40 @@ namespace Intefaces.Repositories
         {
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<IReadOnlyList<Genre>> GetGenresForUser(int userId)
+        {
+            var user = await _context.Users
+                .Where(u => u.Id == userId).Include(u => u.Genres).FirstOrDefaultAsync();
+
+            return user.Genres.ToList();
+        }
+
+        public void RemoveGenresForUser(AppUser appUser)
+        {
+            var genres = _context.Genres.Include(g => g.Users).ToList();
+
+            for(int i = 0; i < genres.Count; i++)
+            {
+                if(genres[i].Users.Any(u => u.Id == appUser.Id))
+                {
+                    genres[i].Users.Remove(appUser);
+                }
+            }
+
+            appUser.Genres.Clear();
+        }
+
+        public void AddGenreForUser(Genre genre, AppUser user)
+        {
+            genre.Users.Add(user);
+
+            user.Genres.Add(genre);
+        }
+
+        public void RemoveGenresForUser(int userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

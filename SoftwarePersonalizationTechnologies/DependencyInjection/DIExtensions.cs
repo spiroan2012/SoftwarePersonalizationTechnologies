@@ -1,5 +1,6 @@
 ﻿using Api.AutomapperProfile;
 using Implementations;
+using Implementations.Repositories;
 using Intefaces.Repositories;
 using Intefaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,6 +24,7 @@ namespace Api.DependencyInjection
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IHallRepository, HallRepository>();
+            services.AddScoped<IGenreRepository, GenreRepository>();
             services.AddScoped<IShowRepository, ShowRepository>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IBookingService, BookingService>();
