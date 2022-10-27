@@ -1,4 +1,5 @@
-﻿using Dtos.Responses;
+﻿using Dtos.Requests;
+using Dtos.Responses;
 using Models.Params;
 using PagedListForEFCore;
 
@@ -9,5 +10,6 @@ namespace Intefaces.Services
         public Task<Tuple<IList<UserDto>, PagedListHeaders>> GetUsers(UserParams userParams);
         public Task<IList<UserDto>> GetById(string id);
         public Task<IList<UserDto>> GetByUsername(string username);
+        public Task UpdateUserLocation(string userId, LocationDto locationDto);
     }
 }

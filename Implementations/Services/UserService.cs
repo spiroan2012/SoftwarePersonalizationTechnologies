@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Dtos.Requests;
 using Dtos.Responses;
 using Intefaces.Repositories;
 using Microsoft.Extensions.Caching.Memory;
@@ -64,6 +65,15 @@ namespace Intefaces.Services
             /*var users = await _userRepository.GetUsersAsync(userParams);
             var header = PagedList<AppUser>.ToHeader(users);
             return new Tuple<IList<UserDto>, PagedListHeaders> (_mapper.Map<List<UserDto>>(users), header);*/
+        }
+
+        public async Task UpdateUserLocation(string userId, LocationDto locationDto)
+        {
+            var userTochange = await _userRepository.GetUserByIdAsync(int.Parse(userId));
+
+            _userRepository.UpdateUserLocationAsync(userTochange, locationDto.Longitude, locationDto.Latitude);
+            var isComplete = await _userRepository.Complete();
+            if (!isComplete) throw new Exception($"Failed to update logged user location");
         }
     }
 }

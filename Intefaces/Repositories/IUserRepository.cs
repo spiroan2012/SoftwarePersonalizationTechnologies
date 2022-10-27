@@ -12,5 +12,7 @@ namespace Intefaces.Repositories
         Task<AppUser?> GetUserByEmailAsync(string? email);
         Task<AppUser?> GetUserByUsernameAsync(string? username);
         Task<string> HealthCheck();
+        void UpdateUserLocationAsync(AppUser? user, double longt, double lat);
+        Task<bool> Complete();
     }
 }

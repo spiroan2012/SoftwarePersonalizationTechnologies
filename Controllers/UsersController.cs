@@ -1,13 +1,17 @@
-﻿using Dtos.Responses;
+﻿using Dtos.Requests;
+using Dtos.Responses;
 using Implementations;
 using Intefaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Params;
+using System.Security.Claims;
 
 namespace Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -35,6 +39,16 @@ namespace Controllers
         public async Task<ActionResult<IList<UserDto>>> GetUserByUsername(string username)
         {
             return Ok(await _userService.GetByUsername(username));
+        }
+
+        [HttpPatch("UpdateUserLocation")]
+        public async Task<ActionResult> UpdateUserLocation(LocationDto locationDto)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            await _userService.UpdateUserLocation(userId, locationDto);
+
+            return Ok();
         }
 
 

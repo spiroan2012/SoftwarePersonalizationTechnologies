@@ -62,5 +62,18 @@ namespace Intefaces.Repositories
             var result = await _context.Users.FromSqlRaw("select top 1 1 as Id from dbo.AspNetUsers ").Select(res => new { Id = res.Id.ToString() }).FirstOrDefaultAsync();
             return result!.Id.ToString();
         }
+
+        public void UpdateUserLocationAsync(AppUser? user, double longt, double lat)
+        {
+            user.Latitude = lat;
+            user.Longitude = longt;
+
+            _context.Entry(user!).State = EntityState.Modified;
+        }
+
+        public async Task<bool> Complete()
+        {
+            return await _context.SaveChangesAsync() > 0;
+        }
     }
 }
