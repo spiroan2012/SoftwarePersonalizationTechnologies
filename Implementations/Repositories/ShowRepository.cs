@@ -27,7 +27,7 @@ namespace Intefaces.Repositories
 
         public async Task<PagedList<Show>> GetAllShowsAsync(ShowParams showParams)
         {
-            var query = _context.Shows?.Include(s => s.Hall).AsQueryable();
+            var query = _context.Shows?.Include(s => s.Hall).Include(s => s.Genre).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(showParams.SearchTitle))
             {
@@ -54,6 +54,7 @@ namespace Intefaces.Repositories
         {
             return await _context.Shows!
                 .Include(s => s.Hall)
+                .Include(s => s.Genre)
                 .SingleOrDefaultAsync(p => p.Id == id);
         }
 
@@ -71,6 +72,7 @@ namespace Intefaces.Repositories
         {
             return await _context.Shows!
                 .Include(s => s.Hall)
+                .Include(s => s.Genre)
                 .Where(p => dateGiven >= p.DateStart && dateGiven <= p.DateEnd)
                 .ToListAsync();
         }

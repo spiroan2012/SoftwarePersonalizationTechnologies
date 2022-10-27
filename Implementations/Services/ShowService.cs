@@ -17,6 +17,7 @@ namespace Intefaces.Services
     public class ShowService : IShowService
     {
         private readonly IShowRepository _showRepository;
+        private readonly IGenreRepository _genreRepository;
         private readonly IHallRepository _hallRepository;
         private readonly IBookingRepository _bookingRepository;
         private readonly IMapper _mapper;
@@ -25,9 +26,10 @@ namespace Intefaces.Services
         private readonly IMemoryCache _memoryCache;
         private readonly ICacheService _cacheService;
 
-        public ShowService(IShowRepository showRepository, IHallRepository hallRepository, IBookingRepository bookingRepository, IMapper mapper, IMemoryCache memoryCache, ICacheService cacheService)
+        public ShowService(IShowRepository showRepository, IGenreRepository genreRepository,IHallRepository hallRepository, IBookingRepository bookingRepository, IMapper mapper, IMemoryCache memoryCache, ICacheService cacheService)
         {
             _showRepository = showRepository;
+            _genreRepository = genreRepository;
             _hallRepository = hallRepository;
             _bookingRepository = bookingRepository;
             _mapper = mapper;
@@ -47,10 +49,14 @@ namespace Intefaces.Services
                 var hall = await _hallRepository.GetHallByIdAsync(createShowDto.HallId);
 
                 if (hall == null) throw new Exception($"The hall with id {createShowDto.HallId} was not found");
+
+                var genre = await _genreRepository.GetGenreByIdAsync(createShowDto.GenreId);
+                if (genre == null) throw new Exception($"The genre with id {createShowDto.GenreId} was not found");
                 var show = _mapper.Map<Show>(createShowDto);
 
                 _hallRepository.AddShow(hall, show);
                 show.Hall = hall;
+                show.Genre = genre;
                 _showRepository.Add(show);
                 var isComplete = await _showRepository.Complete();
                 if (!isComplete) throw new Exception($"Failed to add the show {createShowDto.Title}");
@@ -137,7 +143,7 @@ namespace Intefaces.Services
             {
                 var cacheKey = new ShowCacheKey(showParams);
                 var showsList = _cacheService.Get(cacheKey);
-                if (showsList is null)
+                if (showsList is null || showsList.Count == 0)
                 {
                     var shows = await _showRepository.GetAllShowsAsync(showParams);
                     header = PagedList<Show>.ToHeader(shows);

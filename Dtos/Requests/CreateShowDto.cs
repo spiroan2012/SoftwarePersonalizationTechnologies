@@ -1,4 +1,6 @@
-﻿namespace Dtos.Requests
+﻿using Dtos.Responses;
+
+namespace Dtos.Requests
 {
     public class CreateShowDto
     {
@@ -11,5 +13,6 @@
         public string[]? Directors { get; set; }
         public int Duration { get; init; }
         public int HallId { get; set; }
+        public int GenreId { get; set; }
     }
 }

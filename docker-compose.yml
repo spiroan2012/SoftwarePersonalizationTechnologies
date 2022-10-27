@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: SoftwarePersonalizationTechnologies/Dockerfile
+    ports:
+    - 4016:443 
   db:
     image: "mcr.microsoft.com/mssql/server:2017-latest"
     ports:
@@ -13,3 +15,8 @@ services:
     environment:
     - ACCEPT_EULA=Y
     - MSSQL_SA_PASSWORD=Passw0rd_1
+    volumes:
+    - mssqldata:/var/opt/mssql/data
+
+volumes:
+ mssqldata:

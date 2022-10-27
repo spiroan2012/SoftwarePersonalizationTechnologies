@@ -18,6 +18,8 @@
         public string? HallEmail { get; set; }
         public int HallId { get; set; }
         public int HallCapacity { get; set; }
+        public int GenreId { get; set; }
+        public string? GenreDescription { get; set; }
 
     }
 }

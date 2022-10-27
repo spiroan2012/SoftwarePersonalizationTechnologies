@@ -1,4 +1,6 @@
-﻿namespace Dtos.Responses
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Dtos.Responses
 {
     public class ShowHallDto
     {
@@ -9,5 +11,7 @@
         public int Capacity { get; set; }
         public string? Phone { get; set; }
         public string? EmailAddress { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }

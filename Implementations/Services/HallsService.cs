@@ -35,7 +35,9 @@ namespace Intefaces.Services
                 Address = hallDto.Address,
                 Capacity = hallDto.Capacity,
                 Phone = hallDto.Phone,
-                EmailAddress = hallDto.EmailAddress
+                EmailAddress = hallDto.EmailAddress,
+                Latitude = hallDto.Latitude,
+                Longitude = hallDto.Longitude
             };
 
             _hallsRepository.Add(hall);

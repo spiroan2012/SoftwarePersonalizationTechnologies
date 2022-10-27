@@ -30,6 +30,8 @@ namespace Api.AutomapperProfile
                 .ForMember(dest => dest.Seats, opt =>
                 opt.MapFrom(src => src.Seats!.Select(s => s.SeatNumber!.ToString()).ToArray()));
             CreateMap<Show, ShowDto>()
+                .ForMember(dest => dest.GenreId, opt => opt.MapFrom(src => src.Genre!.Id))
+                .ForMember(dest => dest.GenreDescription, opt => opt.MapFrom(src => src.Genre!.Description))
                 .ForMember(dest => dest.HallName, opt => opt.MapFrom(src => src.Hall!.Title))
                 .ForMember(dest => dest.HallAddress, opt => opt.MapFrom(src => src.Hall!.Address))
                 .ForMember(dest => dest.HallDescription, opt => opt.MapFrom(src => src.Hall!.Description))

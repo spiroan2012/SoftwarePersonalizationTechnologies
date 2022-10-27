@@ -51,6 +51,10 @@ namespace Controllers
         [HttpPost("add")]
         public async Task<ActionResult> AddHall(HallDto hallDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             await _hallsService.AddHall(hallDto);
             return Ok();
         }

@@ -10,5 +10,6 @@
         public string[]? Actors { get; set; }
         public string[]? Directors { get; set; }
         public int Duration { get; init; }
+        public int GenreId { get; set; }
     }
 }
