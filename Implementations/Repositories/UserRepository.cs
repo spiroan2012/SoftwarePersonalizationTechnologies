@@ -17,7 +17,9 @@ namespace Intefaces.Repositories
         public async Task<AppUser?> GetUserByIdAsync(int id)
         {
             return await _context.Users
-                .FindAsync(id);
+                .Include(u => u.Genres)
+                .Where(u => u.Id ==  id)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<AppUser?> GetUserByUsernameAsync(string? username)
@@ -95,14 +97,17 @@ namespace Intefaces.Repositories
                     genres[i].Users.Remove(appUser);
                 }
             }
+            if(appUser.Genres != null)
+            {
+                appUser.Genres.Clear();
+            }
 
-            appUser.Genres.Clear();
+            
         }
 
         public void AddGenreForUser(Genre genre, AppUser user)
         {
             genre.Users.Add(user);
-
             user.Genres.Add(genre);
         }
 

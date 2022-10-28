@@ -1,4 +1,5 @@
 ﻿using Dtos.Responses;
+using GeoCoordinatePortable;
 using Microsoft.AspNetCore.Http;
 using Models;
 using Models.Params;
@@ -66,15 +67,22 @@ namespace Implementations
                 " ολοκληρώθηκε με επιτυχία. Οι θέσεις σας είναι " + seats + ". Παρακαλω΄να είστε στον χώρο του θεάτρου τουλάχιστον μισή ώρα πριν.\n\n" +
                 "Ευχαριστούμε για την προτίμηση και την εμπιστοσύνη.\n\nΜε εκτίμηση,\n\nΗ ομάδα του ShowBooking";
         }
-        /*public static PagedListHeaders ToHeader(this PagedList<T> users)
+
+        public static List<Show> GetShowsWithinDistance(GeoCoordinate userLoc, IList<Show> recShows)
         {
-            return new PagedListHeaders
+            List<Show> finalShows = new List<Show>();
+
+            foreach(var recShow in recShows)
             {
-                CurrentPage = users.CurrentPage,
-                PageSize = users.PageSize,
-                TotalCount = users.TotalCount,
-                TotalPages = users.TotalPages
-            };
-        }*/
+                var distance = userLoc.GetDistanceTo(new GeoCoordinate(recShow.Hall.Latitude, recShow.Hall.Longitude));
+
+                if(distance <= 5000)
+                {
+                    finalShows.Add(recShow);
+                }
+            }
+
+            return finalShows;
+        }
     }
 }

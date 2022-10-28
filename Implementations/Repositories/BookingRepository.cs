@@ -86,5 +86,14 @@ namespace Intefaces.Repositories
                 .ToListAsync();
             return data!;
         }
+
+        public async Task<IList<Booking>> GetBookingsForUserAsync(AppUser? user)
+        {
+            var data = await _context.Bookings!
+                .Where(p => p.User!.Id == user!.Id)
+                .Include(s => s.Show)
+                .ToListAsync();
+            return data!;
+        }
     }
 }

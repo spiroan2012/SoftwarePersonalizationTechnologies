@@ -13,5 +13,6 @@ namespace Intefaces.Repositories
         Task SetAppearForBooking(int bookingId);
         Task<IList<Booking>> GetBookingsForShowAndDate(int showId, DateTime dateGiven);
         Task<IList<Booking>> GetBookingsForUserNotAppearedAync(AppUser user);
+        Task<IList<Booking>> GetBookingsForUserAsync(AppUser? user);
     }
 }

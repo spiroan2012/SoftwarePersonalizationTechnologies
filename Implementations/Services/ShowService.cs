@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Dtos.Requests;
 using Dtos.Responses;
+using GeoCoordinatePortable;
 using Implementations;
 using Intefaces.Repositories;
 using Microsoft.Extensions.Caching.Memory;
@@ -20,18 +21,29 @@ namespace Intefaces.Services
         private readonly IGenreRepository _genreRepository;
         private readonly IHallRepository _hallRepository;
         private readonly IBookingRepository _bookingRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly AsyncRetryPolicy _retryPolicy;
         private readonly AsyncCircuitBreakerPolicy _circuitBreakerPolicy;
         private readonly IMemoryCache _memoryCache;
         private readonly ICacheService _cacheService;
 
-        public ShowService(IShowRepository showRepository, IGenreRepository genreRepository,IHallRepository hallRepository, IBookingRepository bookingRepository, IMapper mapper, IMemoryCache memoryCache, ICacheService cacheService)
+        public ShowService(
+            IShowRepository showRepository, 
+            IGenreRepository genreRepository,
+            IHallRepository hallRepository, 
+            IBookingRepository bookingRepository, 
+            IUserRepository userRepository,
+            IMapper mapper, 
+            IMemoryCache memoryCache, 
+            ICacheService cacheService
+           )
         {
             _showRepository = showRepository;
             _genreRepository = genreRepository;
             _hallRepository = hallRepository;
             _bookingRepository = bookingRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
             _retryPolicy = Policy.Handle<Exception>().RetryForeverAsync();
             _circuitBreakerPolicy = Policy.Handle<Exception>(result => string.IsNullOrEmpty(result.Message)).CircuitBreakerAsync(2, TimeSpan.FromSeconds(1));
@@ -176,6 +188,52 @@ namespace Intefaces.Services
             _showRepository.Update(entityTochange);
             var isComplete = await _showRepository.Complete();
             if (!isComplete) throw new Exception($"Failed to update the show {showUpdateDto.Title}");
+        }
+
+        public async Task<IList<ShowDto>> GetShowsRecomendations(string loggedUserId)
+        {
+            var user = await _userRepository.GetUserByIdAsync(int.Parse(loggedUserId));
+
+            var genres = await _userRepository.GetGenresForUser(int.Parse(loggedUserId));
+
+            var bookings = await _bookingRepository.GetBookingsForUserAsync(user);
+            int[] bookedShowIds = (bookings.Count > 0) ? bookings
+                .Select(b => b.Show.Id)
+                .ToArray()
+                : new int[0];
+            int[] favoriteGenres;
+
+            if (genres.Count > 0)
+            {
+                favoriteGenres = genres.Select(s => s.Id).ToArray();
+            }
+            else if(genres.Count == 0 && bookings.Count > 0)
+            {
+                List<int> genreIds = new List<int>();
+                foreach(int showId in bookedShowIds)
+                {
+                    var genre = await _showRepository.GetGenreOfShow(showId);
+                    genreIds.Add(genre.Id);
+                }
+                favoriteGenres = genreIds.ToArray();
+            }
+            else
+            {
+                throw new Exception($"User has no prefered genres and has not made bookings");
+            }
+
+            var recommendedShows = await _showRepository.GetShowsRecomendations(favoriteGenres, bookedShowIds);
+
+            if (user.Latitude != 0 && user.Longitude != 0)
+            {
+                var finalShows = Extensions.GetShowsWithinDistance(new GeoCoordinate(user.Latitude, user.Longitude), recommendedShows.ToList());
+
+                return _mapper.Map<IList<ShowDto>>(finalShows.Take(10));
+            }
+            else
+            {
+                return _mapper.Map<IList<ShowDto>>(recommendedShows.Take(10));
+            }
         }
     }
 }

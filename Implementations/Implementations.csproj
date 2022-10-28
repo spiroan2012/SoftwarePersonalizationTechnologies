@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="GeoCoordinate.NetCore" Version="1.0.0.1" />
     <PackageReference Include="Google.Apis.Auth" Version="1.57.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />

@@ -14,5 +14,7 @@ namespace Intefaces.Repositories
         Task<bool> Complete();
         void Update(Show? show);
         Task<IReadOnlyList<Show>> GetShowsForSpecificDateAsync(DateTime dateGiven);
+        Task<IReadOnlyList<Show>> GetShowsRecomendations(int[] favoriteGenres, int[] bookedShowsIds);
+        Task<Genre> GetGenreOfShow(int showId);
     }
 }

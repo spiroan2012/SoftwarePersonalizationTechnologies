@@ -2,8 +2,10 @@
 using Dtos.Responses;
 using Implementations;
 using Intefaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Params;
+using System.Security.Claims;
 
 namespace Controllers
 {
@@ -80,6 +82,17 @@ namespace Controllers
         public async Task<ActionResult<IEnumerable<ShowDto>>> GetShowsForDate([FromQuery] DateTime dateGiven)
         {
             var response = await _showService.GetShowsForDate(dateGiven);
+            return Ok(response);
+        }
+
+        [HttpGet("GetShowsReccomendations")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<ShowDto>>> GetShowsReccomendations()
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var response = await _showService.GetShowsRecomendations(userId);
+
             return Ok(response);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Dtos.Requests;
 using Dtos.Responses;
+using Models;
 using Models.Params;
 using PagedListForEFCore;
 
@@ -16,5 +17,6 @@ namespace Intefaces.Services
         Task ChangeHallOfShow(int showId, int newHallId);
         Task<IList<SeatsShowDto>> GetSeatsOfShow(int showId, DateTime showDate);
         Task<IList<ShowDto>> GetShowsForDate(DateTime dateGiven);
+        Task<IList<ShowDto>> GetShowsRecomendations(string loggedUserId);
     }
 }

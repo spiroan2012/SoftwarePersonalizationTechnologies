@@ -1,4 +1,5 @@
-﻿using Implementations;
+﻿using GeoCoordinatePortable;
+using Implementations;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Params;
@@ -75,6 +76,26 @@ namespace Intefaces.Repositories
                 .Include(s => s.Genre)
                 .Where(p => dateGiven >= p.DateStart && dateGiven <= p.DateEnd)
                 .ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<Show>> GetShowsRecomendations(int[] favoriteGenres, int[] bookedShowsIds)
+        {
+            var query = _context.Shows ?
+                .Include(s => s.Hall)
+                .Include(s => s.Genre)
+                .Where(s => s.DateEnd >= DateTime.Now && favoriteGenres.Contains(s.Genre.Id) && !bookedShowsIds.Contains(s.Id));
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<Genre> GetGenreOfShow(int showId)
+        {
+            return await _context
+                .Shows
+                .Include(s => s.Genre)
+                .Where(s => s.Id == showId)
+                .Select(s => s.Genre)
+                .FirstOrDefaultAsync();
         }
     }
 }
