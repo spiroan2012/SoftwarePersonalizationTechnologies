@@ -1,6 +1,7 @@
 ﻿using Api.AutomapperProfile;
 using Implementations;
 using Implementations.Repositories;
+using Implementations.Services;
 using Intefaces.Repositories;
 using Intefaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -34,6 +35,7 @@ namespace Api.DependencyInjection
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IHallsService, HallsService>();
             services.AddScoped<IShowService, ShowService>();
+            services.AddScoped<IGenreService, GenreService>();
             services.AddScoped<IHealthCheckService, HealthcheckService>();
             services.AddSingleton<ICacheService>(service => new CacheService(service.GetService<IMemoryCache>(), configuration));
             services.AddMemoryCache();

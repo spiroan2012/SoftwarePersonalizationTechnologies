@@ -10,5 +10,6 @@ namespace Intefaces.Services
     public interface IGenreService
     {
         Task<IList<GenreDto>> GetGenres();
+        Task<GenreDto> GetGenreById(int id);
     }
 }
