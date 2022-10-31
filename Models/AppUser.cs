@@ -14,6 +14,7 @@ namespace Models
         public bool IsDisabled { get; set; } = false;
         public double Longitude { get; set; }
         public double Latitude { get; set; }
+        public DateTime UserLocationUpdateTimestamp { get; set; }
         public ICollection<AppUserRole>? UserRoles { get; set; }
         public ICollection<Genre>? Genres { get; set; }
     }

@@ -153,15 +153,15 @@ namespace Intefaces.Services
             PagedListHeaders header = new();
             var response = await _circuitBreakerPolicy.ExecuteAsync(() => _retryPolicy.ExecuteAsync(async () =>
             {
-                var cacheKey = new ShowCacheKey(showParams);
-                var showsList = _cacheService.Get(cacheKey);
-                if (showsList is null || showsList.Count == 0)
-                {
+                //var cacheKey = new ShowCacheKey(showParams);
+                //var showsList = _cacheService.Get(cacheKey);
+                //if (showsList is null || showsList.Count == 0)
+                //{
                     var shows = await _showRepository.GetAllShowsAsync(showParams);
                     header = PagedList<Show>.ToHeader(shows);
-                    showsList = _mapper.Map<IList<ShowDto>>(shows);
-                    _cacheService.Add(showsList, cacheKey);
-                }
+                   var showsList = _mapper.Map<IList<ShowDto>>(shows);
+                    //_cacheService.Add(showsList, cacheKey);
+               // }
                 var ret = new Tuple<IList<ShowDto>, PagedListHeaders>(showsList, header);
                 return ret;
             }));
@@ -219,21 +219,21 @@ namespace Intefaces.Services
             }
             else
             {
-                throw new Exception($"User has no prefered genres and has not made bookings");
+                return new List<ShowDto>();
             }
 
             var recommendedShows = await _showRepository.GetShowsRecomendations(favoriteGenres, bookedShowIds);
 
-            if (user.Latitude != 0 && user.Longitude != 0)
-            {
-                var finalShows = Extensions.GetShowsWithinDistance(new GeoCoordinate(user.Latitude, user.Longitude), recommendedShows.ToList());
+            //if (user.Latitude != 0 && user.Longitude != 0)
+            //{
+            //    var finalShows = Extensions.GetShowsWithinDistance(new GeoCoordinate(user.Latitude, user.Longitude), recommendedShows.ToList());
 
-                return _mapper.Map<IList<ShowDto>>(finalShows.Take(10));
-            }
-            else
-            {
+            //    return _mapper.Map<IList<ShowDto>>(finalShows.Take(10));
+            //}
+            //else
+            //{
                 return _mapper.Map<IList<ShowDto>>(recommendedShows.Take(10));
-            }
+           // }
         }
     }
 }

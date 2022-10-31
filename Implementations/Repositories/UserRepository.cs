@@ -69,6 +69,7 @@ namespace Intefaces.Repositories
         {
             user.Latitude = lat;
             user.Longitude = longt;
+            user.UserLocationUpdateTimestamp = DateTime.UtcNow;
 
             _context.Entry(user!).State = EntityState.Modified;
         }
