@@ -60,13 +60,14 @@ namespace Intefaces.Services
             PagedListHeaders header = new();
             var response = await _circuitBreakerPolicy.ExecuteAsync(() => _retryPolicy.ExecuteAsync(async () =>
             {
-                if (!_memoryCache.TryGetValue($"{userParams}", out IList<UserDto> usersList))
-                {
+                IList<UserDto> usersList = new List<UserDto>();
+                //if (!_memoryCache.TryGetValue($"{userParams}", out IList<UserDto> usersList))
+                //{
                     var users = await _userRepository.GetUsersAsync(userParams);
                     header = PagedList<AppUser>.ToHeader(users);
                     usersList = _mapper.Map<List<UserDto>>(users);
-                    _memoryCache.Set($"{userParams}", usersList, new TimeSpan(0, 5, 0));
-                }
+                   // _memoryCache.Set($"{userParams}", usersList, new TimeSpan(0, 5, 0));
+               // }
                 return new Tuple<IList<UserDto>, PagedListHeaders>(usersList, header);
             }));
             return response;

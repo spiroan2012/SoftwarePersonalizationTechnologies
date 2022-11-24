@@ -73,6 +73,7 @@ namespace Controllers
         [HttpGet("GetSeatsOfShow")]
         public async Task<ActionResult<IEnumerable<SeatsShowDto>>> GetSeatsOfShow([FromQuery] int showId, [FromQuery] DateTime showDate)
         {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var response = await _showService.GetSeatsOfShow(showId, showDate);
             return Ok(response);
 

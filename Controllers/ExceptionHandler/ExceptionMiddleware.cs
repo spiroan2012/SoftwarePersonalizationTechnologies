@@ -32,7 +32,7 @@ namespace Controllers.ExceptionHandler
             await context.Response.WriteAsync(new ErrorDetails()
             {
                 Code = context.Response.StatusCode,
-                Message = $"An error occured. {exception.Message} {exception.StackTrace}"
+                Message = $"{exception.Message}"
             }.ToString());
             _logger.LogCritical($"{exception.Message} {exception.StackTrace}");
         }

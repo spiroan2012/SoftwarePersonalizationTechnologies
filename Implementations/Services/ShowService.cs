@@ -160,6 +160,7 @@ namespace Intefaces.Services
                     var shows = await _showRepository.GetAllShowsAsync(showParams);
                     header = PagedList<Show>.ToHeader(shows);
                    var showsList = _mapper.Map<IList<ShowDto>>(shows);
+
                     //_cacheService.Add(showsList, cacheKey);
                // }
                 var ret = new Tuple<IList<ShowDto>, PagedListHeaders>(showsList, header);
@@ -224,16 +225,16 @@ namespace Intefaces.Services
 
             var recommendedShows = await _showRepository.GetShowsRecomendations(favoriteGenres, bookedShowIds);
 
-            //if (user.Latitude != 0 && user.Longitude != 0)
-            //{
-            //    var finalShows = Extensions.GetShowsWithinDistance(new GeoCoordinate(user.Latitude, user.Longitude), recommendedShows.ToList());
+            if (user.Latitude != 0 && user.Longitude != 0)
+            {
+                var finalShows = Extensions.GetShowsWithinDistance(new GeoCoordinate(user.Latitude, user.Longitude), recommendedShows.ToList());
 
-            //    return _mapper.Map<IList<ShowDto>>(finalShows.Take(10));
-            //}
-            //else
-            //{
+                return _mapper.Map<IList<ShowDto>>(finalShows.Take(10));
+            }
+            else
+            {
                 return _mapper.Map<IList<ShowDto>>(recommendedShows.Take(10));
-           // }
+            }
         }
     }
 }

@@ -74,9 +74,9 @@ namespace Implementations
 
             foreach(var recShow in recShows)
             {
-                var distance = userLoc.GetDistanceTo(new GeoCoordinate(recShow.Hall.Latitude, recShow.Hall.Longitude));
+                var distance = userLoc.GetDistanceTo(new GeoCoordinate(recShow.Hall.Latitude, recShow.Hall.Longitude))/1000;
 
-                if(distance <= 5000)
+                if(distance <= 20)
                 {
                     finalShows.Add(recShow);
                 }

@@ -42,7 +42,7 @@ namespace Intefaces.Services
             var newData = users.Select(u => new UserRoleDto
             {
                 Id = u.Id,
-                UserName = u.UserName,
+                Username = u.UserName,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
                 Email = u.Email,
@@ -57,13 +57,13 @@ namespace Intefaces.Services
         {
             var user = await _userManager.FindByNameAsync(username);
 
-            if (user == null) throw new Exception();//return NotFound("Δεν ήταν δυνατή η εύρεση του χρήστη");
+            if (user == null) throw new Exception("Δεν ήταν δυνατή η εύρεση του χρήστη");//return NotFound("Δεν ήταν δυνατή η εύρεση του χρήστη");
 
             user.IsDisabled = !user.IsDisabled;
 
             var result = await _userManager.UpdateAsync(user);
 
-            if (!result.Succeeded) throw new Exception(); //return BadRequest("Δεν ήταν δυνατή η αλλαγή του στατούς του χρήστη");
+            if (!result.Succeeded) throw new Exception("Δεν ήταν δυνατή η αλλαγή του στατούς του χρήστη"); //return BadRequest("Δεν ήταν δυνατή η αλλαγή του στατούς του χρήστη");
 
             return user.IsDisabled;
         }
@@ -74,17 +74,17 @@ namespace Intefaces.Services
 
             var user = await _userManager.FindByNameAsync(username);
 
-            if (user == null) throw new Exception();// return NotFound("Δεν ήταν δυνατή η εύρεση του χρήστη");
+            if (user == null) throw new Exception("Δεν ήταν δυνατή η εύρεση του χρήστη");// return NotFound("Δεν ήταν δυνατή η εύρεση του χρήστη");
 
             var userRoles = await _userManager.GetRolesAsync(user);
 
             var result = await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));
 
-            if (!result.Succeeded) throw new Exception();// return BadRequest("Δεν ήταν δυνατή η προσθήκη του ρόλου");
+            if (!result.Succeeded) throw new Exception("Δεν ήταν δυνατή η προσθήκη του ρόλου");// return BadRequest("Δεν ήταν δυνατή η προσθήκη του ρόλου");
 
             result = await _userManager.RemoveFromRolesAsync(user, userRoles.Except(selectedRoles));
 
-            if (!result.Succeeded) throw new Exception();// return BadRequest("Δεν ήταν δυνατή η αφαίρεση του ρόλου");
+            if (!result.Succeeded) throw new Exception("Δεν ήταν δυνατή η αφαίρεση του ρόλου");// return BadRequest("Δεν ήταν δυνατή η αφαίρεση του ρόλου");
 
             return await _userManager.GetRolesAsync(user);
         }

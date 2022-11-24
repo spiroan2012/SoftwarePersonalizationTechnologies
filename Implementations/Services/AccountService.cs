@@ -31,7 +31,7 @@ namespace Intefaces.Services
 
         public async Task<UserDto> RegisterNewUser(RegisterDto registerDto)
         {
-            if (await _userManager.Users.AnyAsync(x => x.UserName == registerDto.Username!.ToLower())) throw new Exception();// return BadRequest("Το όνομα χρήστη " + registerDto.Username + " χρησιμοποιείται");
+            if (await _userManager.Users.AnyAsync(x => x.UserName == registerDto.Username!.ToLower())) throw new Exception("Το όνομα χρήστη " + registerDto.Username + " χρησιμοποιείται");// return BadRequest("Το όνομα χρήστη " + registerDto.Username + " χρησιμοποιείται");
 
             var user = _mapper.Map<AppUser>(registerDto);
 
@@ -39,7 +39,7 @@ namespace Intefaces.Services
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
 
-            if (!result.Succeeded) throw new Exception();//return BadRequest(result.Errors);
+            if (!result.Succeeded) throw new Exception(result.Errors.ToString());//return BadRequest(result.Errors);
 
             var roleResult = await _userManager.AddToRoleAsync(user, "Member");
 
@@ -56,12 +56,12 @@ namespace Intefaces.Services
         {
             var user = await _userManager.Users
                 .SingleOrDefaultAsync(x => x.UserName == loginDto!.UserName!.ToLower());
-            if (user == null) throw new Exception();// return BadRequest("Invalid Username");
+            if (user == null) throw new Exception("Invalid Username");// return BadRequest("Invalid Username");
 
             var result = await _signInManager
                 .CheckPasswordSignInAsync(user, loginDto.Password, false);
 
-            if (!result.Succeeded) throw new Exception();// return BadRequest("Λάθος κωδικός πρόσβασης");
+            if (!result.Succeeded) throw new Exception("Λάθος κωδικός πρόσβασης");// return BadRequest("Λάθος κωδικός πρόσβασης");
 
             return new UserDto
             {
